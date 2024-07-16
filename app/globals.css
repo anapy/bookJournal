@@ -32,3 +32,17 @@ body {
   }
 }
 
+.letter{
+  border: 1px solid white;
+  height: 48px;
+  display: inline-block;
+  padding: 2px;
+  margin: 5px;
+  box-shadow:6px 2px 3px 0px white;
+  font-size: 28px;
+  width: 30px;
+}
+
+.letter:nth-child(5){
+  margin-left: 15px;
+}
