@@ -8,9 +8,11 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { InputLabel, MenuItem, Select } from '@mui/material';
-import { Genre } from '@/app/models/book';
+import { Book, Genre } from '@/app/models/book';
+import { JsonDataService } from '@/app/services/json-data.service';
 
 export default function BookDialog({openDialog, closeDialog}) {
+  const bookService = new JsonDataService;
   const genres = Genre
   const [book, setBook] = React.useState({
     title: '',
@@ -31,6 +33,10 @@ export default function BookDialog({openDialog, closeDialog}) {
     setBook({...book, [event.target.name]: event.target.value as string});
   };
 
+  const createBook = (book: Book) => {
+    bookService.createBook(book)
+  }
+
   return (
     <React.Fragment>
       <Dialog
@@ -44,6 +50,8 @@ export default function BookDialog({openDialog, closeDialog}) {
             const formJson = Object.fromEntries((formData as any).entries());
             console.log(formJson);
             closeDialog();
+            createBook(formJson as Book);
+
           },
         }}
       >
