@@ -9,7 +9,7 @@ export class JsonDataService implements DataAccessInterface {
     this.books = storageData ? storageData: []
   }
 
-  getBook(): Book[] {
+  getBooks(): Book[] {
     return this.books;
   }
 
@@ -34,7 +34,7 @@ export class JsonDataService implements DataAccessInterface {
   }
 
   private getStorageData() {
-    const storageData = localStorage.getItem('HEROES');
+    const storageData = localStorage.getItem('BOOKS');
     if(storageData) return JSON.parse(storageData)
   }
 

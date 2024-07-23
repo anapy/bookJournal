@@ -9,10 +9,9 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { InputLabel, MenuItem, Select } from '@mui/material';
 import { Book, Genre } from '@/app/models/book';
-import { JsonDataService } from '@/app/services/json-data.service';
+import { DataAccessInterface } from '@/app/services/data-access.interface';
 
-export default function BookDialog({openDialog, closeDialog}) {
-  const bookService = new JsonDataService;
+export default function BookDialog({openDialog, closeDialog, bookService}: Readonly<{openDialog: boolean, closeDialog: Function, bookService: DataAccessInterface}>) {
   const genres = Genre
   const [book, setBook] = React.useState({
     title: '',
@@ -41,7 +40,6 @@ export default function BookDialog({openDialog, closeDialog}) {
     <React.Fragment>
       <Dialog
         open={openDialog}
-        onClose={closeDialog}
         PaperProps={{
           component: 'form',
           onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
