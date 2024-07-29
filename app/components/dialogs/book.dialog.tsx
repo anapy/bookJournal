@@ -7,20 +7,26 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import { InputLabel, MenuItem, Select } from '@mui/material';
+import { Checkbox, FormControlLabel, InputLabel, MenuItem, Select } from '@mui/material';
 import { Book, Genre } from '@/app/models/book';
 import { DataAccessInterface } from '@/app/services/data-access.interface';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers-pro';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import RatingReview from '../stars.component';
+import dayjs from 'dayjs';
 
 export default function BookDialog({openDialog, closeDialog, bookService}: Readonly<{openDialog: boolean, closeDialog: Function, bookService: DataAccessInterface}>) {
   const genres = Genre
   const [book, setBook] = React.useState({
+    id: bookService.getBooks().length.toString(),
     title: '',
     author: '',
     cover: '',
     genre: genres[0],
     dates: {
-      startDate: Date,
-      endDate: Date,
+      startDate: dayjs(),
+      endDate: dayjs(),
     },
     review: '',
     read: false,
@@ -32,8 +38,17 @@ export default function BookDialog({openDialog, closeDialog, bookService}: Reado
     setBook({...book, [event.target.name]: event.target.value as string});
   };
 
-  const createBook = (book: Book) => {
+
+  const handleCheckboxChange = (event: any) => {
+    setBook({...book, [event.target.name]: event.target.checked});
+  };
+
+  const createBook = () => {
     bookService.createBook(book)
+  }
+
+  const handleStars = (score: number) => {
+    setBook({...book, score: score});
   }
 
   return (
@@ -44,12 +59,8 @@ export default function BookDialog({openDialog, closeDialog, bookService}: Reado
           component: 'form',
           onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
             event.preventDefault();
-            const formData = new FormData(event.currentTarget);
-            const formJson = Object.fromEntries((formData as any).entries());
-            console.log(formJson);
             closeDialog();
-            createBook(formJson as Book);
-
+            createBook();
           },
         }}
       >
@@ -57,14 +68,7 @@ export default function BookDialog({openDialog, closeDialog, bookService}: Reado
         <DialogContent>
           <DialogContentText>
             Add book information in order to create it
-          <img
-            srcSet={`${book.cover}`}
-            src={`${book.cover}`}
-            alt="book cover"
-            loading="lazy"
-            width={100}
-            height={200}
-          />
+            {book.cover && <img srcSet={`${book.cover}`} src={`${book.cover}`} alt="book cover" loading="lazy" width={100} height={200}/> }
           </DialogContentText>
           <TextField
             autoFocus
@@ -79,20 +83,7 @@ export default function BookDialog({openDialog, closeDialog, bookService}: Reado
             variant="standard"
             onChange={handleChange}
           />
-          <TextField
-            autoFocus
-            required
-            margin="dense"
-            id="author"
-            name="author"
-            label="Author"
-            type="author"
-            value={book.author}
-            fullWidth
-            variant="standard"
-            onChange={handleChange}
-
-          />
+          <TextField autoFocus required margin="dense" id="author" name="author" label="Author" type="author" value={book.author} fullWidth variant="standard"onChange={handleChange}/>
           <TextField
             autoFocus
             required
@@ -105,22 +96,31 @@ export default function BookDialog({openDialog, closeDialog, bookService}: Reado
             fullWidth
             variant="standard"
             onChange={handleChange}
-
           />
+          <InputLabel>Genre</InputLabel>
+          <Select
+            id="demo-simple-select"
+            value={book.genre}
+            label="Genre"
+            onChange={handleChange}
+            name="genre"
+          >
+              {genres.map((genre) =>
+                <MenuItem key={genre} value={genre}>{genre}</MenuItem>
+              )}
+          </Select>
 
-<InputLabel>Genre</InputLabel>
-  <Select
-    id="demo-simple-select"
-    value={book.genre}
-    label="Genre"
-    onChange={handleChange}
-    name="genre"
-  >
-      {genres.map((genre) =>
-        <MenuItem key={genre}
-                  value={genre}>{genre}</MenuItem>
-      )}
-  </Select>
+          {/* READ BOOK HAVE OPTION OF LEAVING A REVIEW */}
+          <br></br>
+          <FormControlLabel control={<Checkbox />} name="read" checked={book.read} onChange={handleCheckboxChange} label="Read"/>
+          {book.read && <div className='book__read-properties'>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker className='book__read-properties__date' label="Reading start date" value={book.dates.startDate}/>
+                <DatePicker label="Reading end date" value={book.dates.endDate}/>
+              </LocalizationProvider>
+              <RatingReview rating={book.score} setRating={handleStars}></RatingReview>
+              <TextField id="review" name="review" label="Comments" variant="outlined" value={book.review} onChange={handleChange} fullWidth multiline rows={3}/>
+          </div> }
         </DialogContent>
         <DialogActions>
           <Button onClick={closeDialog}>Cancel</Button>

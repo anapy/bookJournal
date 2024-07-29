@@ -64,3 +64,13 @@ body {
     max-width: 150px;
   }
 }
+
+.book__read-properties {
+  border-top: 2px solid #a5a5a5;
+  margin-top: 5px;
+  padding-top: 20px;
+}
+
+.book__read-properties__date {
+  margin-right: 7px !important;
+}
