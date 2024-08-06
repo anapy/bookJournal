@@ -4,7 +4,6 @@ import BookDialog from './components/dialogs/book.dialog';
 import React from 'react';
 import { JsonDataService } from './services/json-data.service';
 import Link from 'next/link';
-import router from 'next/router';
 
 export default function Home() {
   const [openNewBook, setOpenNewBook] = React.useState(false);

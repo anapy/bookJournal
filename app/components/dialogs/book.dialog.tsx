@@ -8,7 +8,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { Checkbox, FormControlLabel, InputLabel, MenuItem, Select } from '@mui/material';
-import { Book, Genre } from '@/app/models/book';
+import { Book, Genre, initialBook } from '@/app/models/book';
 import { DataAccessInterface } from '@/app/services/data-access.interface';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers-pro';
@@ -16,28 +16,17 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import RatingReview from '../stars.component';
 import dayjs from 'dayjs';
 
-export default function BookDialog({openDialog, closeDialog, bookService}: Readonly<{openDialog: boolean, closeDialog: Function, bookService: DataAccessInterface}>) {
-  const genres = Genre
-  const [book, setBook] = React.useState({
-    id: bookService.getBooks().length.toString(),
-    title: '',
-    author: '',
-    cover: '',
-    genre: genres[0],
-    dates: {
-      startDate: dayjs(),
-      endDate: dayjs(),
-    },
-    review: '',
-    read: false,
-    score: 0
-  })
+const initialiazeBook = (book: Book | undefined) => {
+  return book !== undefined ? book : initialBook
+}
 
+export default function BookDialog({openDialog, closeDialog, bookService, givenBook}: Readonly<{openDialog: boolean, closeDialog: Function, bookService: DataAccessInterface, givenBook?: Book }>) {
+  const genres = Genre
+  const [book, setBook] = React.useState(() => initialiazeBook(givenBook))
 
   const handleChange = (event: any) => {
     setBook({...book, [event.target.name]: event.target.value as string});
   };
-
 
   const handleCheckboxChange = (event: any) => {
     setBook({...book, [event.target.name]: event.target.checked});
@@ -115,8 +104,8 @@ export default function BookDialog({openDialog, closeDialog, bookService}: Reado
           <FormControlLabel control={<Checkbox />} name="read" checked={book.read} onChange={handleCheckboxChange} label="Read"/>
           {book.read && <div className='book__read-properties'>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker className='book__read-properties__date' label="Reading start date" value={book.dates.startDate}/>
-                <DatePicker label="Reading end date" value={book.dates.endDate}/>
+                <DatePicker className='book__read-properties__date' label="Reading start date" value={dayjs(book.dates.startDate)} format='DD/MM/YYYY'/>
+                <DatePicker label="Reading end date" value={dayjs(book.dates.endDate)} format='DD/MM/YYYY'/>
               </LocalizationProvider>
               <RatingReview rating={book.score} setRating={handleStars}></RatingReview>
               <TextField id="review" name="review" label="Comments" variant="outlined" value={book.review} onChange={handleChange} fullWidth multiline rows={3}/>
