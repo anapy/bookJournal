@@ -74,3 +74,22 @@ body {
 .book__read-properties__date {
   margin-right: 7px !important;
 }
+
+.details {
+  padding: 20px;
+  background-color: rgb(255, 255, 255);
+  color: black;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: flex-start;
+  height: 60vh;
+  margin-top: 100px;
+}
+
+img {
+  height: 100%;
+  width: 100%;
+  max-width: 50vw;
+  object-fit: cover;
+}
