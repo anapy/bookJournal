@@ -16,13 +16,9 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import RatingReview from '../stars.component';
 import dayjs from 'dayjs';
 
-const initialiazeBook = (book: Book | undefined) => {
-  return book !== undefined ? book : initialBook
-}
-
-export default function BookDialog({openDialog, closeDialog, bookService, givenBook}: Readonly<{openDialog: boolean, closeDialog: Function, bookService: DataAccessInterface, givenBook?: Book }>) {
+export default function BookDialog({openDialog, closeDialog, bookService, givenBook}: Readonly<{openDialog: boolean, closeDialog: Function, bookService: DataAccessInterface, givenBook: Book }>) {
   const genres = Genre
-  const [book, setBook] = React.useState(() => initialiazeBook(givenBook))
+  const [book, setBook] = React.useState(givenBook)
 
   const handleChange = (event: any) => {
     setBook({...book, [event.target.name]: event.target.value as string});
@@ -102,7 +98,7 @@ export default function BookDialog({openDialog, closeDialog, bookService, givenB
           {/* READ BOOK HAVE OPTION OF LEAVING A REVIEW */}
           <br></br>
           <FormControlLabel control={<Checkbox />} name="read" checked={book.read} onChange={handleCheckboxChange} label="Read"/>
-          {book.read && <div className='book__read-properties'>
+          {book.read && book.dates && <div className='book__read-properties'>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker className='book__read-properties__date' label="Reading start date" value={dayjs(book.dates.startDate)} format='DD/MM/YYYY'/>
                 <DatePicker label="Reading end date" value={dayjs(book.dates.endDate)} format='DD/MM/YYYY'/>

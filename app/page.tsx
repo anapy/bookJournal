@@ -4,6 +4,7 @@ import BookDialog from './components/dialogs/book.dialog';
 import React from 'react';
 import { JsonDataService } from './services/json-data.service';
 import Link from 'next/link';
+import { initialBook } from './models/book';
 
 export default function Home() {
   const [openNewBook, setOpenNewBook] = React.useState(false);
@@ -28,7 +29,7 @@ export default function Home() {
       <Button variant='outlined' onClick={() => setOpenNewBook(true)}>New Book</Button>
       <Button variant='outlined'>Add Review</Button>
       <Button variant='outlined'>Pending Books</Button>
-      <BookDialog openDialog={openNewBook} closeDialog={() => {setOpenNewBook(false)}} bookService={bookService}></BookDialog>
+      <BookDialog openDialog={openNewBook} closeDialog={() => {setOpenNewBook(false)}} bookService={bookService} givenBook={initialBook}></BookDialog>
     </main>
   );
 }

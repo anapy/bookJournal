@@ -3,7 +3,6 @@ import { useState } from "react";
 import { JsonDataService } from "../services/json-data.service";
 import BookCard from "./book-card";
 import { Book, initialBook } from "../models/book";
-import BookDialog from "../components/dialogs/book.dialog";
 import React from "react";
 
 export default function Books() {
@@ -25,7 +24,6 @@ export default function Books() {
           <BookCard key={book.title} book={book} click={() => openBook(book)}></BookCard>
         )}
       </div>
-      <BookDialog openDialog={openBookDetails} closeDialog={() => {setOpenBookDetails(false)}} bookService={bookService} book={selectedBook}></BookDialog>
     </>
   )
 }
